@@ -1,5 +1,4 @@
 #include "leetcode.h"
-#include <tuple>
 
 /*
  * [236] Lowest Common Ancestor of a Binary Tree
@@ -62,6 +61,69 @@ using TreeNode = TreeNodeBase<int>;
 class Solution {
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (p == q) {
+            return p;
+        }
+        if (p == root || q == root) {
+            return root;
+        }
+
+        auto result = find(root, p, q);
+        assert(result.first == 2);
+        return result.second;
+    }
+
+    std::pair<int, TreeNode*> find(TreeNode* root, TreeNode* p, TreeNode* q) {
+        int result = 0; // 0 for not found, 1 for found 1, 2 for found 2
+        TreeNode* node = nullptr;
+
+        if (root == p || root == q) {
+            result += 1;
+        }
+
+        if (root->left != nullptr) {
+            auto left = find(root->left, p, q);
+            assert(result + left.first <= 2);
+            if (left.first == 2) {
+                node = left.second;
+            }
+            result += left.first;
+        }
+        if (root->right != nullptr) {
+            auto right = find(root->right, p, q);
+            assert(result + right.first <= 2);
+            if (right.first == 2) {
+                node = right.second;
+            }
+            result += right.first;
+        }
+
+        if (result == 2 && node == nullptr) {
+            node = root;
+        }
+
+        return std::make_pair(result, node);
+    }
+
+    TreeNode* lowestCommonAncestor_brilliant(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // this is very tricky
+        // actually return root here only sees one of p/q is in Tree
+
+        if (p == root || q == root || nullptr == root) {
+            return root;
+        }
+
+        TreeNode* left = lowestCommonAncestor_brilliant(root, p, q);
+        TreeNode* right = lowestCommonAncestor_brilliant(root, p, q);
+
+        // ATTENTION: left != nullptr && right != nullptr -> root
+        if (left == nullptr) {
+            return right;
+        }
+        if (right == nullptr) {
+            return left;
+        }
+
         return root;
     }
 };

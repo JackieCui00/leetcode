@@ -1,5 +1,5 @@
 #include "leetcode.h"
-#include <ios>
+#include <utility>
 
 /*
  * https://leetcode-cn.com/problems/reordered-power-of-2/
@@ -37,10 +37,73 @@
  *     1 <= N <= 10^9
  **/
 
+template<std::size_t N, std::size_t ...Is>
+constexpr std::array<int64_t, N> generate_power_of_2_impl(std::index_sequence<Is...>) {
+    return {(1l << Is)...};
+}
+
+template<std::size_t N>
+constexpr std::array<int64_t, N> generate_power_of_2() {
+    return generate_power_of_2_impl<N>(std::make_index_sequence<N>());
+}
+
 class Solution {
 public:
     bool reorderedPowerOf2(int N) {
+        auto power_of_2 = generate_power_of_2<33>();
 
+        std::array<int, 10> numbers = {};
+        int64_t max = 1;
+        while (N != 0) {
+            const int last = N % 10;
+            assert(last < 10);
+            numbers.at(last) += 1;
+
+            N /= 10;
+            max *= 10;
+        }
+        assert(max >= 10);
+
+        const auto saved = numbers;
+        for (int64_t expect : power_of_2) {
+            if (expect >= max) {
+                break;
+            }
+            if (expect < (max / 10) ) {
+                continue;
+            }
+            numbers = saved;
+
+            bool failed = false;
+            while (expect != 0) {
+                const int last = expect % 10;
+                assert(last < 10);
+                if (numbers.at(last) == 0) {
+                    failed = true;
+                    break;
+                }
+                assert(numbers.at(last) > 0);
+                numbers.at(last) -= 1;
+
+                expect /= 10;
+            }
+            if (failed) {
+                continue;
+            }
+            for (const auto n : numbers) {
+                if (n != 0) {
+                    failed = true;
+                    break;
+                }
+            }
+            if (failed) {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 };
 

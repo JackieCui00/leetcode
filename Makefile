@@ -8,7 +8,7 @@ $(debug ${bins})
 
 all : ${bins}
 
-${BINDIR}/% : %.cpp
+${BINDIR}/% : %.cpp leetcode.h
 	mkdir -p ${BINDIR}
 	-${CC} ${CPPFLAGS} -o $@ $(patsubst ${BINDIR}/%, %.cpp, $@)
 

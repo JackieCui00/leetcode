@@ -38,6 +38,37 @@
 class Solution {
 public:
     int search(std::vector<int>& nums, int target) {
+        return search_inner(nums, 0, nums.size(), target);
+    }
+
+    int search_inner(std::vector<int>& numbers, const std::size_t start,
+            const std::size_t end, const int target) {
+        if (start == end) {
+            return -1;
+        }
+        assert(start < end);
+
+        const std::size_t middle = (start + end) / 2;
+        const int number = numbers.at(middle);
+        if (number == target) {
+            return middle;
+        }
+
+        // ------>|------>
+        //   mid
+        if (number > numbers.at(start)) {
+            if (target > number || target < numbers.at(start)) {
+                return search_inner(numbers, middle, end, target);
+            } else {
+                return search_inner(numbers, start, middle, target);
+            }
+        } else {
+            if (target < number || target >= numbers.at(start)) {
+                return search_inner(numbers, start, middle, target);
+            } else {
+                return search_inner(numbers, middle, end, target);
+            }
+        }
     }
 };
 
@@ -72,6 +103,17 @@ TEST(SearchInRotatedSortedArray, simple) {
 
         const int output = solution.search(numbers, target);
         constexpr int expect_output = -1;
+
+        print(std::make_tuple(numbers, target), output, expect_output);
+        EXPECT_EQ(output, expect_output);
+    }
+
+    {
+        std::vector<int> numbers = {1, 3};
+        const int target = 1;
+
+        const int output = solution.search(numbers, target);
+        constexpr int expect_output = 0;
 
         print(std::make_tuple(numbers, target), output, expect_output);
         EXPECT_EQ(output, expect_output);

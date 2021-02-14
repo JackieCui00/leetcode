@@ -1,4 +1,6 @@
 #include "leetcode.h"
+#include <deque>
+#include <limits>
 
 /*
  * [32] Longest Valid Parentheses
@@ -26,33 +28,33 @@
 class Solution {
 public:
     int longestValidParentheses(std::string s) {
-        std::vector<int> stack;
-        stack.resize(s.length());
+        int maxlen = 0;
 
-        int left=-1;
-        int maxlen=0;
-        int curlen=0;
+        std::vector<int> maxlen_end;
+        maxlen_end.resize(s.length(), 0);
 
-        int head = 0;
+        std::deque<int> stack;
         for (std::size_t i = 0; i < s.length(); ++i) {
             if (s.at(i) == '(') {
-                stack[head++] = i;
+                stack.push_back(i);
+                continue;
             }
+            assert(s.at(i) == ')');
 
-            if (0 == head) {
-                left = i;
+            if (stack.empty()) {
                 continue;
             }
 
-            head --;
-
-            if (0 == head) {
-                curlen = i - left;
-            } else {
-                curlen = i - stack[head-1];
+            const std::size_t closure_start = stack.back();
+            stack.pop_back();
+            assert(closure_start < i);
+            int curlen = i - closure_start + 1;
+            if (closure_start > 0) {
+                curlen += maxlen_end.at(closure_start - 1);
             }
+            maxlen_end.at(i) = curlen;
 
-            maxlen = maxlen>curlen ? maxlen : curlen;
+            maxlen = std::max(maxlen, curlen);
         }
 
         return maxlen;

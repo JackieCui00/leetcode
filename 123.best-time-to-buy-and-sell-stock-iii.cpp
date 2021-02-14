@@ -52,7 +52,23 @@
 class Solution {
 public:
     int maxProfit(std::vector<int>& prices) {
-        return 0;
+        if (prices.empty()) {
+            return 0;
+        }
+
+        int buy1 = -prices.at(0);
+        int sell1 = 0;
+        int buy2 = buy1;
+        int sell2 = 0;
+
+        for (std::size_t i = 1; i < prices.size(); ++i) {
+            buy1 = std::max(buy1, -prices.at(i));
+            sell1 = std::max(sell1, buy1 + prices.at(i));
+            buy2 = std::max(buy2, sell1 - prices.at(i));
+            sell2 = std::max(sell2, buy2 + prices.at(i));
+        }
+
+        return sell2;
     }
 };
 

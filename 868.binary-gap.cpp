@@ -48,6 +48,29 @@
 class Solution {
 public:
     int binaryGap(int n) {
+        int first = n & (-n);
+        n = n & (~first);
+
+        int last = 0;
+        int result = 0;
+        while (n != 0) {
+            int last = n & (-n);
+            n = n & (~last);
+            assert(last > first);
+            const int new_first = last;
+
+            int cur = 0;
+            while (last != first) {
+                last >>= 1;
+                cur += 1;
+            }
+
+            result = std::max(cur, result);
+
+            first = new_first;
+        }
+
+        return result;
     }
 };
 

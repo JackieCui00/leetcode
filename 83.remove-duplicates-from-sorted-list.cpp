@@ -1,5 +1,4 @@
 #include "leetcode.h"
-#include <tuple>
 
 /*
  * [83] Remove Duplicates from Sorted List
@@ -35,16 +34,16 @@ using ListNode = ListNodeBase<int>;
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
+        if (nullptr == head) return nullptr;
+
         ListNode *prev = head;
-        ListNode *node = NULL;
-
-        if (NULL == head) return NULL;
-
-        for (node = prev->next; NULL != node; node = prev->next) {
+        for (ListNode* node = prev->next; nullptr != node; node = prev->next) {
             if (prev->val == node->val) {
                 prev->next = node->next;
+#ifndef SELF_TEST
                 delete node;
-            }else {
+#endif
+            } else {
                 prev = node;
             }
         }
@@ -63,7 +62,13 @@ TEST(RemoveDuplicateFromSortedList, simple) {
         nodes.at(1).next = &nodes.at(2);
 
         ListNode* output = solution.deleteDuplicates(input);
-        print(std::make_tuple(input), output, output); // TODO
+
+        std::array<ListNode, 2> expect_nodes = {1, 2};
+        const ListNode* const expect_output = &expect_nodes.at(0);
+        expect_nodes.at(0).next = &expect_nodes.at(1);
+
+        print(std::make_tuple(print_list(input)), print_list(output), print_list(expect_output)); // TODO
+        EXPECT_EQ(*output, *expect_output);
     }
 
     {
@@ -75,7 +80,14 @@ TEST(RemoveDuplicateFromSortedList, simple) {
         nodes.at(3).next = &nodes.at(4);
 
         ListNode* output = solution.deleteDuplicates(input);
-        print(std::make_tuple(input), output, output); // TODO
+
+        std::array<ListNode, 3> expect_nodes = {1, 2, 3};
+        const ListNode* const expect_output = &expect_nodes.at(0);
+        expect_nodes.at(0).next = &expect_nodes.at(1);
+        expect_nodes.at(1).next = &expect_nodes.at(2);
+
+        print(std::make_tuple(print_list(input)), print_list(output), print_list(expect_output));
+        EXPECT_EQ(*output, *expect_output);
     }
 }
 

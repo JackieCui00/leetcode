@@ -1,5 +1,4 @@
 #include "leetcode.h"
-#include <tuple>
 
 /*
  *
@@ -51,6 +50,39 @@
 class Solution {
 public:
     std::vector<std::vector<int>> combinationSum(std::vector<int>& candidates, int target) {
+        std::sort(candidates.begin(), candidates.end());
+
+        std::vector<std::vector<int>> answer;
+        combination_sum_inner(candidates, 0, target, &answer, {});
+
+        return answer;
+    }
+
+    void combination_sum_inner(const std::vector<int>& candidates, const std::size_t begin,
+                                const int target, std::vector<std::vector<int>>* answer,
+                                const std::vector<int>& combine_old) {
+        if (target < candidates.at(begin)) {
+            return;
+        }
+
+        std::vector<int> combine = combine_old;
+
+        for (std::size_t i = begin; i < candidates.size(); ++i) {
+            if (target < candidates.at(i)) {
+                break;
+            }
+            if (target == candidates.at(i)) {
+                combine.push_back(candidates.at(i));
+                answer->push_back(combine);
+                combine.pop_back();
+                break;
+            }
+
+            assert(target > candidates.at(i));
+            combine.push_back(candidates.at(i));
+            combination_sum_inner(candidates, i, target - candidates.at(i), answer, combine);
+            combine.pop_back();
+        }
     }
 };
 

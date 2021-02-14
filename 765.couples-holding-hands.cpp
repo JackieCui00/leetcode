@@ -30,6 +30,58 @@
 class Solution {
 public:
     int minSwapsCouples(std::vector<int>& row) {
+        assert(row.size() % 2 == 0);
+        std::vector<std::pair<std::size_t, std::size_t>> cluster;
+        cluster.resize(row.size() / 2);
+        for (std::size_t i = 0; i < row.size() / 2; ++i) {
+            cluster.at(i).first = i;
+            cluster.at(i).second = 1;
+        }
+
+        std::function<std::size_t(const std::size_t)> find_root = [&cluster, &find_root] (const std::size_t num) -> std::size_t {
+            const std::size_t parent = cluster.at(num).first;
+            if (parent == num) {
+                return num;
+            }
+            const std::size_t root = find_root(parent);
+            if (root != cluster.at(num).first) {
+                cluster.at(num).first = root;
+                cluster.at(root).second += 1;
+            }
+
+            return root;
+        };
+
+        for (std::size_t i = 0; i < row.size(); i += 2) {
+            const int num1 = row.at(i) / 2;
+            const std::size_t root1 = find_root(num1);
+
+            const int num2 = row.at(i + 1) / 2;
+            const std::size_t root2 = find_root(num2);
+
+            if (root1 != root2) {
+                if (cluster.at(root1).second < cluster.at(root2).second) {
+                    cluster.at(root1).first = root2;
+                    cluster.at(root2).second += 1;
+                } else {
+                    cluster.at(root2).first = root1;
+                    cluster.at(root1).second += 1;
+                }
+            }
+        }
+
+        for (std::size_t i = 0; i < cluster.size(); ++i) {
+            (void)find_root(i);
+        }
+
+        std::size_t result = 0;
+        for (std::size_t i = 0; i < cluster.size(); ++i) {
+            if (cluster.at(i).first == i) {
+                result += cluster.at(i).second - 1;
+            }
+        }
+
+        return result;
     }
 };
 
