@@ -1,6 +1,7 @@
 #pragma once
 
 #include <compare>
+#include <initializer_list>
 #pragma GCC system_header
 
 #include <algorithm>
@@ -37,17 +38,15 @@ struct TreeNodeBase {
 
 template<typename T>
 struct print_tree {
-    const TreeNodeBase<T>* data;
+    const TreeNodeBase<T>& data;
 
-    explicit print_tree(const TreeNodeBase<T>* const data_) : data(data_) {}
+    explicit print_tree(const TreeNodeBase<T>* const data_) : data(*data_) {}
+    explicit print_tree(const TreeNodeBase<T>& data_) : data(data_) {}
 };
 
 template<typename T>
 inline std::ostream& operator<<(std::ostream& out, const print_tree<T> root) {
-    if (nullptr == root.data) {
-        return out;
-    }
-    out << "Tree{Node:" << root.data->val << ", Left:" << print_tree<T>(root.data->left) << ", Right:" << print_tree(root.data->right) << "}";
+    out << "Tree{Node:" << root.data.val << ", Left:" << print_tree<T>(root.data.left) << ", Right:" << print_tree(root.data.right) << "}";
     return out;
 }
 
@@ -67,6 +66,21 @@ struct ListNodeBase {
 
     template<typename ...Args>
     ListNodeBase(Args&& ...args) : val(std::forward<Args>(args)...), next(nullptr) {}
+
+    ListNodeBase(std::initializer_list<T> list) : ListNodeBase(*(list.begin())) {
+        assert(list.size() != 0);
+
+        auto prev = this;
+        for (auto iter = list.begin() + 1; iter != list.end(); ++iter) {
+            prev->next = new ListNodeBase(*iter);
+            prev = prev->next;
+        }
+    }
+    ~ListNodeBase() {
+        if (this->next != nullptr) {
+            delete this->next;
+        }
+    }
 
     bool operator==(const ListNodeBase<T>& other) const {
         const ListNodeBase<T>* node1 = this;
@@ -89,21 +103,25 @@ struct ListNodeBase {
 
 template<typename T>
 struct print_list {
-    const ListNodeBase<T>* data;
+    const ListNodeBase<T>& data;
 
-    explicit print_list(const ListNodeBase<T>* const data_) : data(data_) {}
+    explicit print_list(const ListNodeBase<T>* const data_) : data(*data_) {}
+    explicit print_list(const ListNodeBase<T>& data_) : data(data_) {}
 };
 
 template<typename T>
 inline std::ostream& operator<<(std::ostream& out, const print_list<T> head) {
-    if (nullptr == head.data) {
-        return out;
-    }
-    out << "List{Node:" << head.data->val;
-    for (auto node = head.data->next; nullptr != node; node = node->next) {
+    out << "List{Node:" << head.data.val;
+    for (auto node = head.data.next; nullptr != node; node = node->next) {
         out << ", Node:" << node->val;
     }
     out << "}";
+    return out;
+}
+
+template<typename T>
+inline std::ostream& operator<<(std::ostream& out, const ListNodeBase<T>& node) {
+    out << "<LinkNode:" << node.val << ">";
     return out;
 }
 
@@ -112,8 +130,7 @@ inline std::ostream& operator<<(std::ostream& out, const ListNodeBase<T>* node) 
     if (nullptr == node) {
         return out;
     }
-    out << "<LinkNode:" << node->val << ">";
-    return out;
+    return out << *node;
 }
 
 template<typename T>

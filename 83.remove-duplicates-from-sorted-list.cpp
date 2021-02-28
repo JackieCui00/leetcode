@@ -56,35 +56,27 @@ TEST(RemoveDuplicateFromSortedList, simple) {
     Solution solution;
 
     {
-        std::array<ListNode, 3> nodes = {1, 1, 2};
-        ListNode* input = &nodes.at(0);
-        nodes.at(0).next = &nodes.at(1);
-        nodes.at(1).next = &nodes.at(2);
+        ListNode node{1, 1, 2};
+        ListNode* input = &node;
 
         ListNode* output = solution.deleteDuplicates(input);
 
-        std::array<ListNode, 2> expect_nodes = {1, 2};
-        const ListNode* const expect_output = &expect_nodes.at(0);
-        expect_nodes.at(0).next = &expect_nodes.at(1);
+        ListNode expect_node{1, 2};
+        const ListNode* const expect_output = &expect_node;
 
         print(std::make_tuple(print_list(input)), print_list(output), print_list(expect_output)); // TODO
         EXPECT_EQ(*output, *expect_output);
     }
 
     {
-        std::array<ListNode, 5> nodes = {1, 1, 2, 3, 3};
-        ListNode* input = &nodes.at(0);
-        nodes.at(0).next = &nodes.at(1);
-        nodes.at(1).next = &nodes.at(2);
-        nodes.at(2).next = &nodes.at(3);
-        nodes.at(3).next = &nodes.at(4);
+        ListNode node{1, 1, 2, 3, 3};
+        ListNode* input = &node;
 
         ListNode* output = solution.deleteDuplicates(input);
 
-        std::array<ListNode, 3> expect_nodes = {1, 2, 3};
-        const ListNode* const expect_output = &expect_nodes.at(0);
-        expect_nodes.at(0).next = &expect_nodes.at(1);
-        expect_nodes.at(1).next = &expect_nodes.at(2);
+
+        ListNode expect_node{1, 2, 3};
+        const ListNode* const expect_output = &expect_node;
 
         print(std::make_tuple(print_list(input)), print_list(output), print_list(expect_output));
         EXPECT_EQ(*output, *expect_output);
