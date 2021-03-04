@@ -40,7 +40,7 @@ public:
     }
 
     int longestSubstring_impl(const std::string& s, const std::size_t start,
-                            const std::size_t end, const int k) {
+                            const std::size_t end, const std::size_t k) {
         if (start == end) {
             return 0;
         }

@@ -1,5 +1,5 @@
 CC:=g++
-CPPFLAGS:=-std=c++20 -g -O0 -lgtest
+CPPFLAGS:=-std=c++20 -Wall -Wextra -Werror -pedantic-errors -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wsign-promo -Wswitch-default -Wfloat-equal -Wshadow -Wsuggest-override -Wcast-qual -Wextra-semi -fno-omit-frame-pointer -fsanitize=address -fsanitize=undefined -g -O0 -lgtest
 BINDIR:=bin
 
 bins:=$(patsubst %.cpp, ${BINDIR}/%, $(wildcard *.cpp))

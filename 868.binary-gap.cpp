@@ -51,7 +51,6 @@ public:
         int first = n & (-n);
         n = n & (~first);
 
-        int last = 0;
         int result = 0;
         while (n != 0) {
             int last = n & (-n);
