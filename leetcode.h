@@ -1,6 +1,8 @@
 #pragma once
 
+#include <boost/stacktrace/stacktrace_fwd.hpp>
 #include <compare>
+#include <exception>
 #include <initializer_list>
 #pragma GCC system_header
 
@@ -22,6 +24,7 @@
 #include <utility>
 #include <vector>
 
+#include <boost/stacktrace.hpp>
 #include <gtest/gtest.h>
 
 #define SELF_TEST
@@ -190,5 +193,12 @@ inline void print(const std::tuple<Args...>& input, const T& output, const T& ex
 int main(int argc, char* argv[]) { \
     ::testing::FLAGS_gtest_color="true"; \
     ::testing::InitGoogleTest(&argc, argv); \
-    return RUN_ALL_TESTS(); \
+    int rc = 0; \
+    try { \
+        rc = RUN_ALL_TESTS(); \
+    } catch (std::exception const & x) { \
+        std::cerr << "Got Execption:" << x.what() << std::endl; \
+        std::cerr << ::boost::stacktrace::stacktrace() << std::endl; \
+    } \
+    return rc; \
 }
