@@ -94,7 +94,7 @@ TEST(CouplesHoldingHands, simple) {
         constexpr int expect_output = 1;
 
         print(std::make_tuple(input), output, expect_output);
-        ASSERT_EQ(expect_output, output) << "input:" << input;
+        ASSERT_EQ(expect_output, output);
     }
 
     {
@@ -103,7 +103,7 @@ TEST(CouplesHoldingHands, simple) {
         constexpr int expect_output = 0;
 
         print(std::make_tuple(input), output, expect_output);
-        ASSERT_EQ(expect_output, output) << "input:" << input;
+        ASSERT_EQ(expect_output, output);
     }
 }
 
