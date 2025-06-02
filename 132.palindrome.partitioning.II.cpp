@@ -1,5 +1,4 @@
 #include "leetcode.h"
-#include <bits/c++config.h>
 
 /*
  * 132. Palindrome Partitioning II

@@ -1,7 +1,4 @@
 #include "leetcode.h"
-#include <bits/c++config.h>
-#include <tuple>
-#include <utility>
 
 /*
  * 354. Russian Doll Envelopes
