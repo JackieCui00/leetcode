@@ -1,5 +1,6 @@
 compile_commands.json
 bin
 *.o
-*.sw*
+*.swo
+*.swp
 .cache
