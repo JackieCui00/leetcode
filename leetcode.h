@@ -154,6 +154,12 @@ struct is_container<std::map<Key, Value>> : std::true_type {};
 template<typename Key, typename Value>
 struct is_container<std::unordered_map<Key, Value>> : std::true_type {};
 
+template<typename T1, typename T2>
+inline std::ostream& operator<<(std::ostream& out, const std::pair<T1, T2>& pair) {
+    out << "(" << pair.first << ", " << pair.second << ")";
+    return out;
+}
+
 template<typename T, std::enable_if_t<is_container<T>::value>* = nullptr>
 inline std::ostream& operator<<(std::ostream& out, const T& elements) {
     out << "<";
@@ -174,12 +180,6 @@ constexpr void print_tuple(std::ostream& out, const std::tuple<Args...>& t, std:
 template<typename ...Args>
 inline constexpr std::ostream& operator<<(std::ostream& out, const std::tuple<Args...>& t) {
     print_tuple(out, t, std::make_index_sequence<sizeof...(Args)>());
-    return out;
-}
-
-template<typename T1, typename T2>
-inline std::ostream& operator<<(std::ostream& out, const std::pair<T1, T2>& pair) {
-    out << "(" << pair.first << ", " << pair.second << ")";
     return out;
 }
 
