@@ -154,6 +154,9 @@ struct is_container<std::map<Key, Value>> : std::true_type {};
 template<typename Key, typename Value>
 struct is_container<std::unordered_map<Key, Value>> : std::true_type {};
 
+template<typename T, std::size_t N>
+struct is_container<std::array<T, N>> : std::true_type {};
+
 template<typename T1, typename T2>
 inline std::ostream& operator<<(std::ostream& out, const std::pair<T1, T2>& pair) {
     out << "(" << pair.first << ", " << pair.second << ")";
